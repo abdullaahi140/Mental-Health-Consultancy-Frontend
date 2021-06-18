@@ -1,5 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+	BrowserRouter as Router, Switch, Route, Redirect
+} from 'react-router-dom';
 import { Layout } from 'antd';
 import './App.less';
 
@@ -7,6 +9,8 @@ import Nav from './components/nav.js';
 import Home from './components/home.js';
 import Login from './components/login.js';
 import Register from './components/register.js';
+import BookAppointment from './components/book_appointment.js';
+import StaffDashboard from './components/staff_dashboard.js';
 
 import UserContext from './contexts/user.js';
 
@@ -51,7 +55,7 @@ class App extends React.Component {
 			login: this.login,
 			logout: this.logout
 		};
-		const { imageStyle } = this.state;
+		const { imageStyle, loggedIn } = this.state;
 
 		return (
 			<UserContext.Provider value={context}>
@@ -63,6 +67,17 @@ class App extends React.Component {
 
 						<Layout.Content style={imageStyle}>
 							<Switch>
+								<Route path="/dashboard">
+									<StaffDashboard changeImage={this.changeImage} />
+								</Route>
+								<Route
+									path="/book_appointment"
+									render={(renderProps) => (
+										(loggedIn)
+											? <BookAppointment changeImage={this.changeImage} />
+											: <Redirect to={{ pathname: '/login', state: { from: renderProps.location } }} />
+									)}
+								/>
 								<Route path="/register">
 									<Register changeImage={this.changeImage} />
 								</Route>

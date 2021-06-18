@@ -1,1 +1,24 @@
 @import '~antd/dist/antd.less';
+
+li.ant-menu-item.ant-menu-item-only-child:focus-within {
+    border: 2px solid @primary-color;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+// When the cards are focused using the keyboard
+button:focus-visible {
+	outline: 2px solid @primary-color;
+}
+
+// When the button is focused using the keyboard
+.ant-btn.ant-btn-primary.ant-btn-lg:focus,
+.ant-btn.ant-btn-primary.ant-btn-lg:hover {
+	border: 2px solid white;
+	outline: 2px solid black;
+}
+
+.ant-btn:focus,
+.ant-btn:hover {
+	border: 2px solid @primary-color;
+}
