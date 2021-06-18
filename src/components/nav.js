@@ -3,6 +3,9 @@ import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import UserContext from '../contexts/user.js';
 
+/**
+ * Navigation component for page header
+ */
 class Nav extends React.Component {
 	constructor(props) {
 		super(props);
