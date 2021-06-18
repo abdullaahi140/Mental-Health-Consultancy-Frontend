@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import {
-	Form, Input, Button, message, Row, Col
+	Form, Input, Button, message, Row, Col, Typography
 } from 'antd';
 
 import PropTypes from 'prop-types';
@@ -119,21 +119,26 @@ class RegistrationForm extends React.Component {
 		return (
 			<Row type="flex" justify="space-around" align="middle" style={{ minHeight: '83vh' }}>
 				<Col span={24}>
+					<Typography.Title
+						style={{ textAlign: 'center', marginBottom: '2rem' }}
+					>
+						Register
+					</Typography.Title>
 					<Form {...formItemLayout} name="register" onFinish={this.onFinish} scrollToFirstError>
 						<Form.Item name="firstName" label="First Name">
-							<Input />
+							<Input size="large" />
 						</Form.Item>
 
 						<Form.Item name="lastName" label="Last Name">
-							<Input />
+							<Input size="large" />
 						</Form.Item>
 
 						<Form.Item name="username" label="Username" rules={usernameRules}>
-							<Input />
+							<Input size="large" />
 						</Form.Item>
 
 						<Form.Item name="password" label="Password" rules={passwordRules} hasFeedback>
-							<Input.Password />
+							<Input.Password size="large" />
 						</Form.Item>
 
 						<Form.Item
@@ -143,11 +148,15 @@ class RegistrationForm extends React.Component {
 							hasFeedback
 							rules={confirmRules}
 						>
-							<Input.Password />
+							<Input.Password size="large" />
 						</Form.Item>
 
 						<Form.Item {...tailFormItemLayout}>
-							<Button type="primary" htmlType="submit">
+							<Button
+								type="primary"
+								size="large"
+								htmlType="submit"
+							>
 								Register
 							</Button>
 						</Form.Item>

@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import {
-	Form, Input, Button, message, Row, Col
+	Form, Typography, Input, Button, message, Row, Col
 } from 'antd';
 import PropTypes from 'prop-types';
 
@@ -71,8 +71,13 @@ class LoginForm extends React.Component {
 		}
 
 		return (
-			<Row type="flex" justify="space-around" align="middle" style={{ minHeight: '83vh' }}>
+			<Row type="flex" justify="center" align="middle" style={{ minHeight: '83vh' }}>
 				<Col span={24}>
+					<Typography.Title
+						style={{ textAlign: 'center', marginBottom: '2rem' }}
+					>
+						Login
+					</Typography.Title>
 					<Form
 						{...formItemLayout}
 						name="login"
@@ -80,13 +85,20 @@ class LoginForm extends React.Component {
 						scrollToFirstError
 					>
 						<Form.Item name="username" label="Username" rules={usernameRules}>
-							<Input />
+							<Input size="large" />
 						</Form.Item>
 						<Form.Item name="password" label="Password" rules={passwordRules} hasFeedback>
-							<Input.Password />
+							<Input.Password size="large" />
 						</Form.Item>
 						<Form.Item {...tailFormItemLayout}>
-							<Button style={{ marginBottom: '1rem' }} type="primary" htmlType="submit">Login</Button>
+							<Button
+								style={{ marginBottom: '1rem' }}
+								size="large"
+								type="primary"
+								htmlType="submit"
+							>
+								Login
+							</Button>
 						</Form.Item>
 					</Form>
 				</Col>
