@@ -25,7 +25,9 @@ class Home extends React.Component {
 				>
 					Need professional help?
 					<br />
-					Book an appointment with a professional consultant
+					Book an appointment with a
+					<br />
+					mental health consultant.
 				</Typography.Title>
 				<Button
 					type="primary"
