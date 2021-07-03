@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-	Button, Row, Select, Typography
+	Button, DatePicker, Row, Select, Typography
 } from 'antd';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 import AppointmentList from './appointment_list.js';
 import UserContext from '../contexts/user.js';
@@ -23,6 +24,7 @@ class BookAppointment extends React.PureComponent {
 		const { changeImage } = this.props;
 		changeImage(false);
 		this.changeDate = this.changeDate.bind(this);
+		this.checkToday = this.checkToday.bind(this);
 		this.fetchStaff = this.fetchStaff.bind(this);
 		this.fetchAppointments = this.fetchAppointments.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -30,12 +32,12 @@ class BookAppointment extends React.PureComponent {
 
 	componentDidMount() {
 		this.fetchStaff();
-		// this.fetchAppointments();
 	}
 
 	componentDidUpdate(_prevProps, prevState) {
 		const { staffID, date } = this.state;
 		if (staffID !== prevState.staffID || date !== prevState.date) {
+			this.checkToday(date);
 			this.fetchAppointments();
 		}
 	}
@@ -55,12 +57,22 @@ class BookAppointment extends React.PureComponent {
 		const { date } = this.state;
 		const adjustedDate = new Date(date);
 		adjustedDate.setDate(date.getDate() + adjust);
+		this.setState({ date: adjustedDate });
+	}
+
+	/**
+	 * Check if the current date matches today.
+	 * Disable "Previous day" button if it matches.
+	 * @param {Date} date - The date to be checked
+	 */
+	checkToday(date) {
+		date.setHours(1, 0, 0, 0);
 		const today = new Date();
 		today.setHours(1, 0, 0, 0);
-		if (today.getTime() === adjustedDate.getTime()) {
-			this.setState({ disabled: true, date: adjustedDate });
+		if (today.getTime() === date.getTime()) {
+			this.setState({ disabled: true });
 		} else {
-			this.setState({ disabled: false, date: adjustedDate });
+			this.setState({ disabled: false });
 		}
 	}
 
@@ -111,7 +123,8 @@ class BookAppointment extends React.PureComponent {
 		));
 
 		const defaultStaff = (staff.length > 0) ? staff[0]
-			: { firstName: 'Staff', lastName: 'User' };
+			: { firstName: 'James', lastName: 'Johnson' };
+		const dateFormat = 'dddd Do MMMM YYYY';
 
 		return (
 			<div style={{ marginTop: '2rem' }}>
@@ -130,7 +143,7 @@ class BookAppointment extends React.PureComponent {
 							marginRight: '0.5rem'
 						}}
 					>
-						Staff:
+						Choose a mental health consultant:
 					</Typography.Text>
 					<Select
 						id="staff_select"
@@ -138,41 +151,53 @@ class BookAppointment extends React.PureComponent {
 						size="large"
 						defaultValue={`${defaultStaff.firstName} ${defaultStaff.lastName}`}
 						onChange={this.handleChange}
-						aria-label="Staff"
+						aria-label="Choose a mental health consultant:"
 						aria-expanded="false"
 						aria-activedescendant="staff_select"
+						aria-owns="staff_select"
+						aria-controls="staff_select"
+						aria-autocomplete="none"
 					>
 						{staffList}
 					</Select>
 				</Row>
 
 				<Row justify="center">
+					<Typography.Text
+						strong
+						style={{ fontSize: '16px', marginBottom: '1rem' }}
+					>
+						Choose the appointment date below
+					</Typography.Text>
+				</Row>
+
+				<Row justify="center">
 					<Button
-						style={{ marginRight: '4rem', width: '7rem' }}
+						style={{ width: '9rem' }}
 						disabled={disabled}
 						icon={<ArrowLeftOutlined />}
 						size="large"
 						onClick={() => this.changeDate(-1)}
 					>
-						Previous
+						Previous day
 					</Button>
-					<Typography.Text
-						strong
-						style={{
-							alignSelf: 'center',
-							textAlign: 'center',
-							fontSize: '16px',
-							width: '9rem'
-						}}
-					>
-						{date.toDateString()}
-					</Typography.Text>
+
+					<DatePicker
+						style={{ width: '18rem', margin: '0rem 2rem' }}
+						size="large"
+						inputReadOnly
+						allowClear={false}
+						value={moment(date, dateFormat)}
+						format={dateFormat}
+						disabledDate={(currentDate) => currentDate < moment().startOf('day')}
+						onChange={(momentDate) => this.setState({ date: momentDate.toDate() })}
+					/>
 					<Button
-						style={{ marginLeft: '4rem', width: '7rem' }}
+						style={{ width: '7rem' }}
 						size="large"
 						onClick={() => this.changeDate(1)}
 					>
-						Next
+						Next day
 						<ArrowRightOutlined />
 					</Button>
 				</Row>
