@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import {
 	Form, Typography, Input, Button, message, Row, Col
@@ -20,11 +20,11 @@ const tailFormItemLayout = {
 };
 
 const passwordRules = [
-	{ required: true, message: 'Please input your password!' }
+	{ required: true, message: 'Please enter your password!' }
 ];
 
 const usernameRules = [
-	{ required: true, message: 'Please input your username!', whitespace: true }
+	{ required: true, message: 'Please enter your username!', whitespace: true }
 ];
 
 /**
@@ -58,7 +58,7 @@ class LoginForm extends React.Component {
 			})
 			.catch((err) => {
 				console.error(err);
-				message.error('Incorrect username or password');
+				message.error('Incorrect username or password. Try again.', 5);
 			});
 	}
 
@@ -72,7 +72,7 @@ class LoginForm extends React.Component {
 
 		return (
 			<Row type="flex" justify="center" align="middle" style={{ minHeight: '83vh' }}>
-				<Col span={24}>
+				<Col span={16}>
 					<Typography.Title
 						style={{ textAlign: 'center', marginBottom: '2rem' }}
 					>
@@ -101,6 +101,17 @@ class LoginForm extends React.Component {
 							</Button>
 						</Form.Item>
 					</Form>
+					<Typography style={{ textAlign: 'center', fontSize: '16px' }}>
+						Don&#39;t have an account?&nbsp;
+						<Link
+							to={{
+								pathname: '/register',
+								state: location.state
+							}}
+						>
+							Register one here
+						</Link>
+					</Typography>
 				</Col>
 			</Row>
 		);
