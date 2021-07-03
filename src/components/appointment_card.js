@@ -28,11 +28,17 @@ class AppointmentCard extends React.Component {
 				closable: true,
 				keyboard: true,
 				icon: <QuestionCircleOutlined />,
-				title: <Typography.Text strong>Would you like to book this appointment?</Typography.Text>,
+				title: (
+					<Typography.Text strong>
+						Would you like to book this
+						<br />
+						appointment?
+					</Typography.Text>
+				),
 				content: <Typography.Text>
 					{date.toDateString()}
 					<br />
-					{time.substring(0, time.length - 3)}
+					{`${time.substring(0, 5)} - ${time.substring(0, 2)}:30`}
 					{/* eslint-disable-next-line react/jsx-closing-tag-location */}
 				</Typography.Text>,
 				onOk: this.addAppointment
@@ -63,7 +69,7 @@ class AppointmentCard extends React.Component {
 			})
 		})
 			.then(() => updateParent())
-			.then(() => message.success('Appointment has been booked', 2.5))
+			.then(() => message.success('Appointment has been booked', 5))
 			.catch((err) => console.error(err));
 	}
 
@@ -79,7 +85,7 @@ class AppointmentCard extends React.Component {
 			>
 				<Card.Meta
 					style={{ textAlign: 'start' }}
-					title={title}
+					title={`${title} - ${title.substring(0, 2)}:30`}
 					description={<Typography.Text strong type={type}>{subtitle}</Typography.Text>}
 				/>
 			</Card>
