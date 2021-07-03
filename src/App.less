@@ -1,14 +1,20 @@
-@import '~antd/dist/antd.less';
+@import "~antd/dist/antd.less";
+
+.ant-typography a:hover,
+.ant-typography a:focus {
+	text-decoration: underline;
+}
 
 li.ant-menu-item.ant-menu-item-only-child:focus-within {
-    border: 2px solid @primary-color;
+	border: 2px solid @primary-color;
 	padding-left: 0.5em;
 	padding-right: 0.5em;
 }
 
 // When the cards are focused using the keyboard
 button:focus-visible {
-	outline: 2px solid @primary-color;
+	border: 2px solid white;
+	outline: 2px solid black;
 }
 
 // When the button is focused using the keyboard
@@ -20,5 +26,10 @@ button:focus-visible {
 
 .ant-btn:focus,
 .ant-btn:hover {
-	border: 2px solid @primary-color;
+	border: 2px solid white;
+	outline: 2px solid black;
+}
+
+.ant-picker-input > input {
+	text-align: center;
 }
