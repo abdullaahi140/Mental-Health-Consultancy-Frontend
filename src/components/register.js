@@ -17,6 +17,20 @@ const tailFormItemLayout = {
 	wrapperCol: { xs: { span: 24, offset: 0 }, sm: { span: 16, offset: 6 } }
 };
 
+const firstNameRules = [
+	{
+		required: true,
+		message: 'Please enter your first name!'
+	}
+];
+
+const lastNameRules = [
+	{
+		required: true,
+		message: 'Please enter your last name!'
+	}
+];
+
 const usernameRules = [
 	{
 		required: true,
@@ -104,7 +118,7 @@ class RegistrationForm extends React.Component {
 			})
 			.catch((err) => {
 				console.error(err);
-				message.error('Incorrect username or password');
+				message.error('Username is taken');
 			});
 	}
 
@@ -118,18 +132,18 @@ class RegistrationForm extends React.Component {
 
 		return (
 			<Row type="flex" justify="space-around" align="middle" style={{ minHeight: '83vh' }}>
-				<Col span={24}>
+				<Col span={16}>
 					<Typography.Title
 						style={{ textAlign: 'center', marginBottom: '2rem' }}
 					>
 						Register
 					</Typography.Title>
 					<Form {...formItemLayout} name="register" onFinish={this.onFinish} scrollToFirstError>
-						<Form.Item name="firstName" label="First Name">
+						<Form.Item name="firstName" label="First Name" rules={firstNameRules}>
 							<Input size="large" />
 						</Form.Item>
 
-						<Form.Item name="lastName" label="Last Name">
+						<Form.Item name="lastName" label="Last Name" rules={lastNameRules}>
 							<Input size="large" />
 						</Form.Item>
 
