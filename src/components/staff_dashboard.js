@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-	Button, Card, Col, Row, Typography
+	Button, Card, Col, DatePicker, Row, Typography
 } from 'antd';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 import UserContext from '../contexts/user.js';
 
@@ -63,6 +64,7 @@ class StaffDashboard extends React.Component {
 
 	render() {
 		const { date, appointments } = this.state;
+		const dateFormat = 'dddd Do MMMM YYYY';
 		const appointmentList = appointments.map((appt) => (
 			<Col key={appt.ID}>
 				<Card style={{ width: 400, marginBottom: '2rem' }}>
@@ -89,35 +91,44 @@ class StaffDashboard extends React.Component {
 				>
 					Consultant Dashboard
 				</Typography.Title>
+
+				<Row justify="center">
+					<Typography.Text
+						strong
+						style={{ fontSize: '16px', marginBottom: '1rem' }}
+					>
+						Show appointments for the date below
+					</Typography.Text>
+				</Row>
+
 				<Row justify="center">
 					<Button
-						style={{ marginRight: '4rem', width: '7rem' }}
+						style={{ width: '9rem' }}
 						icon={<ArrowLeftOutlined />}
 						size="large"
 						onClick={() => this.changeDate(-1)}
 					>
-						Previous
+						Previous day
 					</Button>
-					<Typography.Text
-						strong
-						style={{
-							alignSelf: 'center',
-							textAlign: 'center',
-							fontSize: '16px',
-							width: '9rem'
-						}}
-					>
-						{date.toDateString()}
-					</Typography.Text>
+					<DatePicker
+						style={{ width: '18rem', margin: '0rem 2rem' }}
+						size="large"
+						inputReadOnly
+						allowClear={false}
+						value={moment(date, dateFormat)}
+						format={dateFormat}
+						onChange={(momentDate) => this.setState({ date: momentDate.toDate() })}
+					/>
 					<Button
-						style={{ marginLeft: '4rem', width: '7rem' }}
+						style={{ width: '7rem' }}
 						size="large"
 						onClick={() => this.changeDate(1)}
 					>
-						Next
+						Next day
 						<ArrowRightOutlined />
 					</Button>
 				</Row>
+
 				<Row style={{ marginTop: '2rem' }} justify="space-around">
 					{appointmentList}
 				</Row>
