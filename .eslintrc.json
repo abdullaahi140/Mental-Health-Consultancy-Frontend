@@ -12,7 +12,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "indent": ["error", "tab"],
+    "indent": ["error", "tab", {"SwitchCase": 1}],
     "no-tabs": ["error", { "allowIndentationTabs": true }],
     "comma-dangle": ["error", "never"],
     "no-unused-expressions": ["error", { "allowShortCircuit": true }],
@@ -24,6 +24,7 @@
     "react/jsx-indent": [2, "tab", { "checkAttributes": true, "indentLogicalExpressions": true }],
     "react/jsx-indent-props": [2, "tab"],
     "react/jsx-props-no-spreading": 0,
-    "react/forbid-prop-types": 0
+    "react/forbid-prop-types": 0,
+    "linebreak-style": "off"
   }
 }

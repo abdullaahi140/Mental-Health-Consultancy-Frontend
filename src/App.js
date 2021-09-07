@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-	BrowserRouter as Router, Switch, Route, Redirect
+	BrowserRouter as Router, Switch, Route
 } from 'react-router-dom';
 import { Layout } from 'antd';
 import './App.less';
@@ -12,90 +12,59 @@ import Register from './components/register.js';
 import BookAppointment from './components/book_appointment.js';
 import StaffDashboard from './components/staff_dashboard.js';
 
-import UserContext from './contexts/user.js';
+import UserProvider from './providers/UserProvider.js';
+import PrivateRoute from './HoC/private.js';
 
-class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			user: null,
-			loggedIn: false,
-			imageStyle: { backgroundImage: 'none' }
-		};
-		this.login = this.login.bind(this);
-		this.logout = this.logout.bind(this);
-		this.changeImage = this.changeImage.bind(this);
-	}
+function App() {
+	const [imageStyle, setImageStyle] = useState({ backgroundImage: 'none' });
 
-	login(user) {
-		this.setState({ user, loggedIn: true });
-	}
-
-	logout() {
-		this.setState({ user: null, loggedIn: false });
-	}
-
-	changeImage(checkImage) {
+	function changeImage(checkImage) {
 		if (checkImage) {
-			this.setState({
-				imageStyle: {
-					backgroundImage: 'url(splash.jpeg)',
-					backgroundPosition: '-256px',
-					backgroundSize: '2208px 1443px'
-				}
+			setImageStyle({
+				backgroundImage: 'url(splash.jpeg)',
+				backgroundPosition: '-256px',
+				backgroundSize: '2208px 1443px'
 			});
 		} else {
-			this.setState({ imageStyle: { backgroundImage: 'none' } });
+			setImageStyle({ backgroundImage: 'none' });
 		}
 	}
 
-	render() {
-		const context = {
-			...this.state,
-			login: this.login,
-			logout: this.logout
-		};
-		const { imageStyle, loggedIn } = this.state;
+	return (
+		<UserProvider>
+			<Router>
+				<Layout style={{ minHeight: '100vh', backgroundColor: '#ffffff' }}>
+					<Layout.Header>
+						<Nav />
+					</Layout.Header>
 
-		return (
-			<UserContext.Provider value={context}>
-				<Router>
-					<Layout style={{ minHeight: '100vh', backgroundColor: '#ffffff' }}>
-						<Layout.Header className="header">
-							<Nav />
-						</Layout.Header>
+					<Layout.Content style={imageStyle}>
+						<Switch>
+							<Route path="/dashboard">
+								<StaffDashboard changeImage={changeImage} />
+							</Route>
+							<PrivateRoute
+								path="/book_appointment"
+								component={BookAppointment}
+								changeImage={changeImage}
+							/>
+							<Route path="/register">
+								<Register changeImage={changeImage} />
+							</Route>
+							<Route path="/login">
+								<Login changeImage={changeImage} />
+							</Route>
+							<Route exact path="/">
+								<Home changeImage={changeImage} />
+							</Route>
+						</Switch>
+					</Layout.Content>
 
-						<Layout.Content style={imageStyle}>
-							<Switch>
-								<Route path="/dashboard">
-									<StaffDashboard changeImage={this.changeImage} />
-								</Route>
-								<Route
-									path="/book_appointment"
-									render={(renderProps) => (
-										(loggedIn)
-											? <BookAppointment changeImage={this.changeImage} />
-											: <Redirect to={{ pathname: '/login', state: { from: renderProps.location } }} />
-									)}
-								/>
-								<Route path="/register">
-									<Register changeImage={this.changeImage} />
-								</Route>
-								<Route path="/login">
-									<Login changeImage={this.changeImage} />
-								</Route>
-								<Route exact path="/">
-									<Home changeImage={this.changeImage} />
-								</Route>
-							</Switch>
-						</Layout.Content>
-
-						<Layout.Footer style={{ textAlign: 'center' }}>Mental Health Consultancy</Layout.Footer>
-					</Layout>
-				</Router>
-			</UserContext.Provider>
-		);
-	}
+					<Layout.Footer style={{ textAlign: 'center' }}>Mental Health Consultancy</Layout.Footer>
+				</Layout>
+			</Router>
+		</UserProvider>
+	);
 }
 
 export default App;
