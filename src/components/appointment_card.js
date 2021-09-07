@@ -1,59 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import {
 	Card, message, Modal, Row, Typography
 } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-import UserContext from '../contexts/user.js';
+import useAuthentication from '../hooks/useAuthentication.js';
 
 /**
  * Card component for booking an appoinment.
  */
-class AppointmentCard extends React.Component {
-	constructor(props) {
-		super(props);
-		this.handleClick = this.handleClick.bind(this);
-		this.addAppointment = this.addAppointment.bind(this);
-	}
-
-	/**
-	 * Show a pop up to ask user to confirm booking an appoinment.
-	 */
-	handleClick() {
-		const { hoverable, time, date } = this.props;
-		if (hoverable) {
-			Modal.confirm({
-				centered: true,
-				closable: true,
-				keyboard: true,
-				icon: <QuestionCircleOutlined />,
-				title: (
-					<Typography.Text strong>
-						Would you like to book this
-						<br />
-						appointment?
-					</Typography.Text>
-				),
-				content: <Typography.Text>
-					{date.toDateString()}
-					<br />
-					{`${time.substring(0, 5)} - ${time.substring(0, 2)}:30`}
-					{/* eslint-disable-next-line react/jsx-closing-tag-location */}
-				</Typography.Text>,
-				onOk: this.addAppointment
-			});
-		}
-	}
+function AppointmentCard(props) {
+	const { state: { user } } = useAuthentication();
 
 	/**
 	 * Send a request to web api to add an appoinment for the user.
 	 */
-	addAppointment() {
-		const { user } = this.context;
+	function addAppointment() {
 		const {
 			date, time, staffID, updateParent
-		} = this.props;
+		} = props;
 		fetch('http://localhost:3000/api/v1/appt', {
 			method: 'POST',
 			headers: {
@@ -73,42 +40,69 @@ class AppointmentCard extends React.Component {
 			.catch((err) => console.error(err));
 	}
 
-	render() {
-		const {
-			title, subtitle, hoverable, type
-		} = this.props;
-
-		let card = (
-			<Card
-				style={{ width: '50rem' }}
-				hoverable={hoverable}
-			>
-				<Card.Meta
-					style={{ textAlign: 'start' }}
-					title={`${title} - ${title.substring(0, 2)}:30`}
-					description={<Typography.Text strong type={type}>{subtitle}</Typography.Text>}
-				/>
-			</Card>
-		);
+	/**
+	 * Show a pop up to ask user to confirm booking an appoinment.
+	 */
+	function handleClick() {
+		const { hoverable, time, date } = props;
 		if (hoverable) {
-			card = (
-				<button
-					style={{ border: 'none', padding: '0px', backgroundColor: '#ffffff' }}
-					type="button"
-					onClick={this.handleClick}
-				>
-					{card}
-				</button>
-			);
+			Modal.confirm({
+				centered: true,
+				closable: true,
+				keyboard: true,
+				icon: <QuestionCircleOutlined />,
+				title: (
+					<Typography.Text strong>
+						Would you like to book this
+						<br />
+						appointment?
+					</Typography.Text>
+				),
+				content: <Typography.Text>
+					{date.toDateString()}
+					<br />
+					{`${time.substring(0, 5)} - ${time.substring(0, 2)}:30`}
+					{/* eslint-disable-next-line react/jsx-closing-tag-location */}
+				</Typography.Text>,
+				onOk: addAppointment
+			});
 		}
+	}
 
-		return (
-			<Row style={{ marginBottom: '1rem' }} justify="center">
-				{/* Imbed Card in button to allow for keyboard focus and highlighting */}
+	const {
+		title, subtitle, hoverable, type
+	} = props;
+
+	let card = (
+		<Card
+			style={{ width: '50rem' }}
+			hoverable={hoverable}
+		>
+			<Card.Meta
+				style={{ textAlign: 'start' }}
+				title={`${title} - ${title.substring(0, 2)}:30`}
+				description={<Typography.Text strong type={type}>{subtitle}</Typography.Text>}
+			/>
+		</Card>
+	);
+	if (hoverable) {
+		card = (
+			<button
+				style={{ border: 'none', padding: '0px', backgroundColor: '#ffffff' }}
+				type="button"
+				onClick={handleClick}
+			>
 				{card}
-			</Row>
+			</button>
 		);
 	}
+
+	return (
+		<Row style={{ marginBottom: '1rem' }} justify="center">
+			{/* Imbed Card in button to allow for keyboard focus and highlighting */}
+			{card}
+		</Row>
+	);
 }
 
 AppointmentCard.propTypes = {
@@ -121,6 +115,5 @@ AppointmentCard.propTypes = {
 	type: PropTypes.string.isRequired,
 	updateParent: PropTypes.func.isRequired
 };
-AppointmentCard.contextType = UserContext;
 
 export default AppointmentCard;

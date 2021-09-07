@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import {
 	Form, Typography, Input, Button, message, Row, Col
 } from 'antd';
 import PropTypes from 'prop-types';
 
-import UserContext from '../contexts/user.js';
+import useAuthentication from '../hooks/useAuthentication.js';
 
 // Form layout for different screen sizes
 const formItemLayout = {
@@ -30,19 +30,25 @@ const usernameRules = [
 /**
  * Login form component for app signup.
  */
-class LoginForm extends React.Component {
-	constructor(props) {
-		super(props);
-		const { changeImage } = this.props;
-		changeImage(false);
-		this.state = { redirect: false };
-		this.login = this.login.bind(this);
+function LoginForm(props) {
+	const { login } = useAuthentication();
+	const [redirect, setRedirect] = useState(false);
+	const location = useLocation();
+	const history = useHistory();
+	const { from } = location.state || { from: { pathname: '/' } };
+	if (redirect) {
+		history.push(from.pathname);
 	}
+
+	useEffect(() => {
+		const { changeImage } = props;
+		changeImage(false);
+	}, []);
 
 	/**
 	 * Post the login request using values from the form
 	 * */
-	login(values) {
+	function loginUser(values) {
 		const { username, password } = values;
 		fetch('http://localhost:3000/api/v1/auth/login', {
 			method: 'POST',
@@ -52,9 +58,8 @@ class LoginForm extends React.Component {
 		})
 			.then((res) => res.json())
 			.then((user) => {
-				const { login } = this.context;
 				login(user);
-				this.setState({ redirect: true });
+				setRedirect(true);
 			})
 			.catch((err) => {
 				console.error(err);
@@ -62,70 +67,56 @@ class LoginForm extends React.Component {
 			});
 	}
 
-	render() {
-		const { redirect } = this.state;
-		const { location, history } = this.props;
-		const { from } = location.state || { from: { pathname: '/' } };
-		if (redirect) {
-			history.push(from.pathname);
-		}
-
-		return (
-			<Row type="flex" justify="center" align="middle" style={{ minHeight: '83vh' }}>
-				<Col span={16}>
-					<Typography.Title
-						style={{ textAlign: 'center', marginBottom: '2rem' }}
-					>
-						Login
-					</Typography.Title>
-					<Form
-						{...formItemLayout}
-						name="login"
-						onFinish={this.login}
-						scrollToFirstError
-					>
-						<Form.Item name="username" label="Username" rules={usernameRules}>
-							<Input size="large" />
-						</Form.Item>
-						<Form.Item name="password" label="Password" rules={passwordRules} hasFeedback>
-							<Input.Password size="large" />
-						</Form.Item>
-						<Form.Item {...tailFormItemLayout}>
-							<Button
-								style={{ marginBottom: '1rem' }}
-								size="large"
-								type="primary"
-								htmlType="submit"
-							>
-								Login
-							</Button>
-						</Form.Item>
-					</Form>
-					<Typography style={{ textAlign: 'center', fontSize: '16px' }}>
-						Don&#39;t have an account?&nbsp;
-						<Link
-							to={{
-								pathname: '/register',
-								state: location.state
-							}}
+	return (
+		<Row type="flex" justify="center" align="middle" style={{ minHeight: '83vh' }}>
+			<Col span={16}>
+				<Typography.Title
+					style={{ textAlign: 'center', marginBottom: '2rem' }}
+				>
+					Login
+				</Typography.Title>
+				<Form
+					{...formItemLayout}
+					name="login"
+					onFinish={loginUser}
+					scrollToFirstError
+				>
+					<Form.Item name="username" label="Username" rules={usernameRules}>
+						<Input size="large" />
+					</Form.Item>
+					<Form.Item name="password" label="Password" rules={passwordRules} hasFeedback>
+						<Input.Password size="large" />
+					</Form.Item>
+					<Form.Item {...tailFormItemLayout}>
+						<Button
+							style={{ marginBottom: '1rem' }}
+							size="large"
+							type="primary"
+							htmlType="submit"
 						>
-							Register one here
-						</Link>
-					</Typography>
-				</Col>
-			</Row>
-		);
-	}
+							Login
+						</Button>
+					</Form.Item>
+				</Form>
+				<Typography style={{ textAlign: 'center', fontSize: '16px' }}>
+					Don&#39;t have an account?&nbsp;
+					<Link
+						to={{
+							pathname: '/register',
+							state: location.state
+						}}
+					>
+						Register one here
+					</Link>
+				</Typography>
+			</Col>
+		</Row>
+	);
 }
 
-LoginForm.contextType = UserContext;
 LoginForm.propTypes = {
-	/** Object containing info on the past, present and future location of the app  */
-	location: PropTypes.object.isRequired,
-	/** Object containing the history of URLs for the app */
-	history: PropTypes.object.isRequired,
 	/** Function to change the background image of the page */
 	changeImage: PropTypes.func.isRequired
 };
 
-export default withRouter(LoginForm);
+export default LoginForm;
