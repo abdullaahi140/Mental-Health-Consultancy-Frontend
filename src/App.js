@@ -31,8 +31,8 @@ function App() {
 	}
 
 	return (
-		<UserProvider>
-			<Router>
+		<Router>
+			<UserProvider>
 				<Layout style={{ minHeight: '100vh', backgroundColor: '#ffffff' }}>
 					<Layout.Header>
 						<Nav />
@@ -62,8 +62,8 @@ function App() {
 
 					<Layout.Footer style={{ textAlign: 'center' }}>Mental Health Consultancy</Layout.Footer>
 				</Layout>
-			</Router>
-		</UserProvider>
+			</UserProvider>
+		</Router>
 	);
 }
 
