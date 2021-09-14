@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import UserContext from '../contexts/user.js';
 
 function userReducer(state, action) {
@@ -18,7 +18,7 @@ function userReducer(state, action) {
 function UserProvider(props) {
 	const initialState = { user: null, loggedIn: false };
 	const [state, dispatch] = useReducer(userReducer, initialState);
-	const value = useMemo(() => [state, dispatch], [state]);
+	const value = { state, dispatch };
 	return <UserContext.Provider value={value} {...props} />;
 }
 

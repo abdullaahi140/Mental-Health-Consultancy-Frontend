@@ -7,7 +7,7 @@ function useAuthentication() {
 		throw new Error('useAuthentication must be used within a UserProvider');
 	}
 
-	const [state, dispatch] = context;
+	const { state, dispatch } = context;
 	const login = ((user) => dispatch({ type: 'LOGIN', payload: user }));
 	const logout = (() => dispatch({ type: 'LOGOUT' }));
 
