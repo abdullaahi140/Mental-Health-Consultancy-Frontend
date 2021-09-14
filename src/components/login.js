@@ -50,7 +50,7 @@ function LoginForm(props) {
 	 * */
 	function loginUser(values) {
 		const { username, password } = values;
-		fetch('http://localhost:3000/api/v1/auth/login', {
+		fetch(`${process.env.REACT_APP_API_URL}/api/v1/auth/login`, {
 			method: 'POST',
 			headers: {
 				Authorization: `Basic ${btoa(`${username}:${password}`)}`

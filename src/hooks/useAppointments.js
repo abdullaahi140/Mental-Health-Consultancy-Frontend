@@ -8,7 +8,7 @@ function useAppointments(initStaffID, initDate) {
 	const { state: { user } } = useAuthentication();
 
 	function getAppointments() {
-		fetch(`http://localhost:3000/api/v1/appt/${staffID}/${date.toISOString().substring(0, 10)}`, {
+		fetch(`${process.env.REACT_APP_API_URL}/api/v1/appt/${staffID}/${date.toISOString().substring(0, 10)}`, {
 			headers: {
 				Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`
 			}

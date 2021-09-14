@@ -21,7 +21,7 @@ function AppointmentCard(props) {
 		const {
 			date, time, staffID, updateParent
 		} = props;
-		fetch('http://localhost:3000/api/v1/appt', {
+		fetch(`${process.env.REACT_APP_API_URL}/api/v1/appt`, {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

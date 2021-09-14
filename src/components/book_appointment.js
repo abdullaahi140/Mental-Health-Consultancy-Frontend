@@ -28,7 +28,7 @@ function BookAppointment(props) {
 	 * Fetch all staff names and IDs from the web API
 	 */
 	useEffect(() => {
-		fetch('http://localhost:3000/api/v1/users/staff', {
+		fetch(`${process.env.REACT_APP_API_URL}/api/v1/users/staff`, {
 			headers: {
 				Authorization: `Basic ${btoa(`${user.username}:${user.password}`)}`
 			}
