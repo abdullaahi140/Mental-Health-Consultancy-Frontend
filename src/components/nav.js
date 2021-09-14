@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import useAuthentication from '../hooks/useAuthentication.js';
 
@@ -17,7 +18,7 @@ function Nav() {
 			if (user.role !== 'user') {
 				apptNav = (
 					<Menu.Item key="3">
-						<a href="/dashboard">Staff Dashboard</a>
+						<Link to="/dashboard">Staff Dashboard</Link>
 					</Menu.Item>
 				);
 			}
@@ -30,34 +31,32 @@ function Nav() {
 		}
 
 		if (!loggedIn) {
-			loginNav = (
-				<>
-					<Menu.Item key="4" style={{ float: 'right' }}>
-						<a href="/register">Register</a>
-					</Menu.Item>
-					<Menu.Item key="5" style={{ float: 'right' }}>
-						<a href="/login">Login</a>
-					</Menu.Item>
-				</>
-			);
+			loginNav = [
+				<Menu.Item key="4" style={{ float: 'right' }}>
+					<Link to="/register">Register</Link>
+				</Menu.Item>,
+				<Menu.Item key="5" style={{ float: 'right' }}>
+					<Link to="/login">Login</Link>
+				</Menu.Item>
+			];
 		} else {
-			loginNav = (
+			loginNav = [
 				<Menu.Item
 					key="6"
 					onClick={(() => logout())}
 					style={{ float: 'right' }}
 				>
-					<a href="/">Logout</a>
+					<Link to="/">Logout</Link>
 				</Menu.Item>
-			);
+			];
 		}
-		return [apptNav, loginNav];
+		return [apptNav, ...loginNav];
 	}
 
 	return (
-		<Menu theme="light" defaultSelectedKeys={['1']}>
-			<Menu.Item key="1"><a href="/">Home</a></Menu.Item>
-			<Menu.Item key="2"><a href="/book_appointment">Book Appointment</a></Menu.Item>
+		<Menu theme="light" mode="horizontal" defaultSelectedKeys={['1']}>
+			<Menu.Item key="1"><Link to="/">Home</Link></Menu.Item>
+			<Menu.Item key="2"><Link to="/book_appointment">Book Appointment</Link></Menu.Item>
 			{handleNav()}
 		</Menu>
 	);
